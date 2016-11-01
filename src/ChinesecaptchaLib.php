@@ -1,9 +1,6 @@
 <?php
 namespace Chinesecaptcha;
 
-
-(new ChinesecaptchaLib)->outPut();
-
 class ChinesecaptchaLib
 {
     private $text;
