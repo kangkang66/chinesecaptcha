@@ -1,6 +1,8 @@
 <?php
 namespace Chinesecaptcha;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
+use Validator;
 
 class ChinesecaptchaServiceProvider extends ServiceProvider
 {
@@ -22,7 +24,7 @@ class ChinesecaptchaServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('chinesecaptcha', function () {
-            return $this->app->make('Chinesecaptcha\ChinesecaptchaLib');
+            return $this->app->make('Chinesecaptcha\Chinesecaptcha');
         });
     }
 }

@@ -1,9 +1,8 @@
 <?php
 namespace Chinesecaptcha;
 
-class ChinesecaptchaLib
+class Chinesecaptcha
 {
-    private $text;
     private $width=120;
     private $height=45;
     private $font_num=4;
@@ -17,13 +16,14 @@ class ChinesecaptchaLib
 
     private function createText($font_num)
     {
-        $word = file_get_contents("chinese");
+        $word = file_get_contents(dirname(__FILE__)."/chinese");
         $list = explode(" ",$word);
         $count = count($list)-1;
         $text = [];
         for ($i=0;$i<$font_num;$i++)
         {
-            $text[] = $list[rand(0,$count)];
+            $tmp = $list[rand(0,$count)];
+            $text[] = $tmp;
         }
         session()->put('captcha', implode('',$text));
         return $text;
@@ -32,8 +32,6 @@ class ChinesecaptchaLib
 
     public function outPut()
     {
-        $this->text = $this->createText($this->font_num);
-
         header("content-type: image/png");
         $image=imagecreate($this->width, $this->height);
         imagecolorallocate($image,0xff,0xff,0xff);                //设定背景颜色
@@ -47,9 +45,10 @@ class ChinesecaptchaLib
             imagesetpixel($image,mt_rand(0, $this->width),mt_rand(0, $this->height), $noise_color);
         }
 
-        $font_face = "../font/simsun.ttf";
+        $font_face = dirname(dirname(__FILE__))."/font/simsun.ttf";
         $x = 2;
-        foreach ($this->text as $code)
+        $text = $this->createText($this->font_num);
+        foreach ($text as $code)
         {
             imagettftext($image, $this->font_size, mt_rand(-6,6), $x, 30,$font_color, $font_face, $code);
             $x+=30;
@@ -69,7 +68,6 @@ class ChinesecaptchaLib
     //获取文本
     public function getText()
     {
-        return implode('',$this->text);
+        return session()->get('captcha');
     }
 }
-
